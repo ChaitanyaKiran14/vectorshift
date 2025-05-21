@@ -10,16 +10,16 @@ import urllib.parse
 from fastapi.responses import HTMLResponse
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
+
 load_dotenv()
 
-# Get credentials from environment variables
+
 CLIENT_ID = os.environ.get('HUBSPOT_CLIENT_ID')
 CLIENT_SECRET = os.environ.get('HUBSPOT_CLIENT_SECRET')
 REDIRECT_URI = os.environ.get('HUBSPOT_REDIRECT_URI')
 SCOPES = os.environ.get('HUBSPOT_SCOPES')
 
-# Validate environment variables
+
 if not all([CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, SCOPES]):
     raise ValueError("Missing required HubSpot environment variables")
 
@@ -116,6 +116,7 @@ def create_integration_item_metadata_object(
         type=item_type,
         parent_id=parent_id,
         parent_path_or_name=parent_name,
+
     )
 
     return integration_item_metadata

@@ -1,63 +1,93 @@
-import { useState } from 'react';
-import {
-    Box,
-    TextField,
-    Button,
-} from '@mui/material';
+import React, { useState } from 'react';
+import { Button, TextField, Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Alert, CircularProgress } from '@mui/material';
 import axios from 'axios';
 
-const endpointMapping = {
-    'Notion': 'notion',
-    'Airtable': 'airtable',
-    'Hubspot': 'hubspot'
-};
+const DataForm = ({ integrationType, credentials }) => {
+  const [loadedData, setLoadedData] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-export const DataForm = ({ integrationType, credentials }) => {
-    const [loadedData, setLoadedData] = useState(null);
-    const endpoint = endpointMapping[integrationType];
+  const endpointMapping = {
+    Notion: 'notion',
+    Airtable: 'airtable',
+    Hubspot: 'hubspot',
+  };
 
-    // In src/data-form.js
-const handleLoad = async () => {
+  const endpoint = endpointMapping[integrationType];
+
+  const handleLoad = async () => {
     try {
-        if (!endpoint) {
-            throw new Error(`Invalid integration type: ${integrationType}`);
-        }
-        const formData = new FormData();
-        formData.append('credentials', JSON.stringify(credentials));
-        const response = await axios.post(`http://localhost:8000/integrations/${endpoint}/load`, formData);
-        const formattedData = JSON.stringify(response.data, null, 2);
-        setLoadedData(formattedData);
+      setLoading(true);
+      setError(null);
+      if (!endpoint) {
+        throw new Error(`Invalid integration type: ${integrationType}`);
+      }
+      const formData = new FormData();
+      formData.append('credentials', JSON.stringify(credentials));
+      const response = await axios.post(`http://localhost:8000/integrations/${endpoint}/load`, formData);
+      console.log(response.data)
+      setLoadedData(response.data);
+      
     } catch (e) {
-        console.error('Load error:', e);
-        alert(e?.response?.data?.detail || e.message || 'Failed to load data');
+      console.error('Load error:', e);
+      setError(e?.response?.data?.detail || e.message || 'Failed to load data');
+    } finally {
+      setLoading(false);
     }
+  };
+
+  return (
+    <Box sx={{ mt: 4, p: 2, bgcolor: 'background.paper', borderRadius: 2, boxShadow: 1 }}>
+      <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleLoad}
+          disabled={loading || !credentials}
+        >
+          {loading ? <CircularProgress size={24} color="inherit" /> : 'Load Data'}
+        </Button>
+      </Box>
+
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      )}
+
+      {loadedData && loadedData.length > 0 ? (
+        <TableContainer component={Paper} sx={{ maxHeight: 400, overflow: 'auto' }}>
+          <Table stickyHeader aria-label="integration data table">
+            <TableHead>
+              <TableRow>
+                <TableCell sx={{ fontWeight: 'bold', bgcolor: 'grey.100' }}>ID</TableCell>
+                <TableCell sx={{ fontWeight: 'bold', bgcolor: 'grey.100' }}>Name</TableCell>
+                <TableCell sx={{ fontWeight: 'bold', bgcolor: 'grey.100' }}>Type</TableCell>
+                
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {loadedData.map((item, index) => (
+                <TableRow
+                  key={item.id || index}
+                  sx={{ '&:nth-of-type(odd)': { bgcolor: 'grey.50' } }}
+                >
+                  <TableCell>{item.id}</TableCell>
+                  <TableCell>{item.name}</TableCell>
+                  <TableCell>{item.type}</TableCell>
+                  
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      ) : loadedData && loadedData.length === 0 ? (
+        <Alert severity="info" sx={{ mt: 2 }}>
+          No data found for {integrationType}.
+        </Alert>
+      ) : null}
+    </Box>
+  );
 };
 
-    return (
-        <Box display='flex' justifyContent='center' alignItems='center' flexDirection='column' width='100%'>
-            <Box display='flex' flexDirection='column' width='100%'>
-                <TextField
-                    label="Loaded Data"
-                    value={loadedData || ''}
-                    sx={{mt: 2}}
-                    InputLabelProps={{ shrink: true }}
-                    disabled
-                />
-                <Button
-                    onClick={handleLoad}
-                    sx={{mt: 2}}
-                    variant='contained'
-                >
-                    Load Data
-                </Button>
-                <Button
-                    onClick={() => setLoadedData(null)}
-                    sx={{mt: 1}}
-                    variant='contained'
-                >
-                    Clear Data
-                </Button>
-            </Box>
-        </Box>
-    );
-}
+export default DataForm;

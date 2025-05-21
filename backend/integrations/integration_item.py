@@ -16,6 +16,7 @@ class IntegrationItem:
         children: Optional[List[str]] = None,
         mime_type: Optional[str] = None,
         delta: Optional[str] = None,
+    
         drive_id: Optional[str] = None,
         visibility: Optional[bool] = True,
     ):

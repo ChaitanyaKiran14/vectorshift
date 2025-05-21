@@ -1,5 +1,3 @@
-// integration-form.js
-
 import { useState } from 'react';
 import {
     Box,
@@ -7,9 +5,8 @@ import {
     TextField,
 } from '@mui/material';
 import { IntegrationComponent } from './integrations/integration-component';
-import { DataForm } from './data-form';
+import  DataForm  from './data-form';
 
-// In src/integration-form.js
 const integrationMapping = {
     'Notion': { component: IntegrationComponent, props: { type: 'Notion', endpoint: 'notion', label: 'Notion' } },
     'Airtable': { component: IntegrationComponent, props: { type: 'Airtable', endpoint: 'airtable', label: 'Airtable' } },
