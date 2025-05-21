@@ -1,5 +1,3 @@
-# notion.py
-
 import json
 import secrets
 from fastapi import Request, HTTPException
@@ -12,8 +10,8 @@ from integrations.integration_item import IntegrationItem
 
 from redis_client import add_key_value_redis, get_value_redis, delete_key_redis
 
-CLIENT_ID = 'XXX'
-CLIENT_SECRET = 'XXX'
+CLIENT_ID = 'b7a688f5-cb1d-4150-9530-cf962146babf'
+CLIENT_SECRET = 'cbb5d667-66c1-4252-97a3-6f4b41f76d0b'
 encoded_client_id_secret = base64.b64encode(f'{CLIENT_ID}:{CLIENT_SECRET}'.encode()).decode()
 
 REDIRECT_URI = 'http://localhost:8000/integrations/notion/oauth2callback'

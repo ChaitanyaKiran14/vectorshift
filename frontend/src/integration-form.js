@@ -9,10 +9,11 @@ import {
 import { IntegrationComponent } from './integrations/integration-component';
 import { DataForm } from './data-form';
 
+// In src/integration-form.js
 const integrationMapping = {
     'Notion': { component: IntegrationComponent, props: { type: 'Notion', endpoint: 'notion', label: 'Notion' } },
     'Airtable': { component: IntegrationComponent, props: { type: 'Airtable', endpoint: 'airtable', label: 'Airtable' } },
-    'HubSpot': { component: IntegrationComponent, props: { type: 'HubSpot', endpoint: 'hubspot', label: 'HubSpot' } },
+    'Hubspot': { component: IntegrationComponent, props: { type: 'Hubspot', endpoint: 'hubspot', label: 'HubSpot' } }, // Change 'HubSpot' to 'Hubspot'
 };
 
 export const IntegrationForm = () => {
