@@ -20,8 +20,6 @@ export const HubspotIntegration = ({ user, org, integrationParams, setIntegratio
             const authUrl = response.data;
             console.log(authUrl)
 
-            
-            // Open OAuth window
             const width = 800;
             const height = 800;
             const left = window.screenX + (window.outerWidth - width) / 2;
@@ -32,7 +30,6 @@ export const HubspotIntegration = ({ user, org, integrationParams, setIntegratio
                 `width=${width},height=${height},left=${left},top=${top}`
             );
 
-            // Check periodically if the window is closed
             const timer = setInterval(async () => {
                 if (authWindow.closed) {
                     clearInterval(timer);
